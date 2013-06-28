@@ -13,16 +13,20 @@ module CfRegistrar
         @logger = Steno.logger("cf.registrar")
 
         @message_bus_uri = config["mbus"]
-
         @host = config["host"]
         @port = config["port"]
         @uri = config["uri"]
         @tags = config["tags"]
-        @type = config["varz"]["type"]
-        @username = config["varz"]["username"]
-        @password = config["varz"]["password"]
-        @uuid = config["varz"]["uuid"] || SecureRandom.uuid
         @index = config["index"] || 0
+
+        if config["varz"]
+          @type = config["varz"]["type"]
+          @username = config["varz"]["username"]
+          @password = config["varz"]["password"]
+          @uuid = config["varz"]["uuid"] || SecureRandom.uuid
+        end
+
+        self
       end
     end
   end
