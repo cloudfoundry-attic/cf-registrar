@@ -41,7 +41,6 @@ module CfRegistrar
 
     def initialize
       @logger = Config.logger
-      @message_bus = CfMessageBus::MessageBus.new(uri: Config.message_bus_uri)
     end
 
     def register_varz_credentials
@@ -58,13 +57,13 @@ module CfRegistrar
       else
         @logger.info("Connected to NATS - varz registration")
 
-        @message_bus.subscribe(DISCOVER_TOPIC) do |msg, reply|
+        message_bus.subscribe(DISCOVER_TOPIC) do |msg, reply|
           @logger.debug("Received #{DISCOVER_TOPIC} publishing #{reply.inspect} #{@discover_msg.inspect}")
-          @message_bus.publish(reply, @discover_msg)
+          message_bus.publish(reply, @discover_msg)
         end
 
         @logger.info("Announcing start up #{ANNOUNCE_TOPIC}")
-        @message_bus.publish(ANNOUNCE_TOPIC, @discover_msg)
+        message_bus.publish(ANNOUNCE_TOPIC, @discover_msg)
       end
     end
 
@@ -78,11 +77,11 @@ module CfRegistrar
 
       @logger.info("Connected to NATS - router registration")
 
-      @message_bus.subscribe(ROUTER_START_TOPIC) do |message|
+      message_bus.subscribe(ROUTER_START_TOPIC) do |message|
         handle_router_greeting(message)
       end
 
-      @message_bus.request(ROUTER_GREET_TOPIC) do |message|
+      message_bus.request(ROUTER_GREET_TOPIC) do |message|
         handle_router_greeting(message)
       end
 
@@ -95,7 +94,7 @@ module CfRegistrar
     end
 
     def send_registration_message
-      @message_bus.publish(ROUTER_REGISTER_TOPIC, @registration_message)
+      message_bus.publish(ROUTER_REGISTER_TOPIC, @registration_message)
     end
 
     def handle_router_greeting(message)
@@ -109,10 +108,14 @@ module CfRegistrar
 
     def send_unregistration_message(&block)
       @logger.info("Sending unregistration: #{@registration_message}")
-      @message_bus.publish(ROUTER_UNREGISTER_TOPIC, @registration_message, &block)
+      message_bus.publish(ROUTER_UNREGISTER_TOPIC, @registration_message, &block)
     end
 
     private
+
+    def message_bus
+      @message_bus ||= CfMessageBus::MessageBus.new(uri: Config.message_bus_uri)
+    end
 
     def setup_interval(interval)
       EM.cancel_timer(@registration_timer) if @registration_timer
