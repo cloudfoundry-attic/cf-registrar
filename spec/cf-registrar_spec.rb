@@ -56,6 +56,7 @@ module CfRegistrar
   describe Registrar do
     let(:message_bus) { CfMessageBus::MockMessageBus.new }
     let(:bus_uri) { "a message bus uri" }
+    let(:logger) { double(:logger, info: nil, error: nil, debug: nil) }
     let(:config) do
       {
         "mbus" => bus_uri,
@@ -70,8 +71,8 @@ module CfRegistrar
     before do
       EM.stub(:cancel_timer)
       Config.configure(config)
-      Config.stub(:logger).and_return(double(:logger, info: nil, error: nil, debug: nil))
-      CfMessageBus::MessageBus.stub(:new).with(uri: bus_uri).and_return(message_bus)
+      Config.stub(:logger).and_return(logger)
+      CfMessageBus::MessageBus.stub(:new) { message_bus }
     end
 
     describe "#register_with_router" do
@@ -82,6 +83,11 @@ module CfRegistrar
           uris: Array(config["uri"]),
           tags: config["tags"]
         }
+      end
+
+      it "creates the message bus correctly with logger" do
+        CfMessageBus::MessageBus.should_receive(:new).with(uri: bus_uri, logger: logger)
+        subject.register_with_router
       end
 
       it "registers routes immediately" do

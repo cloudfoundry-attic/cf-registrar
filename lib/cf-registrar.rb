@@ -114,7 +114,9 @@ module CfRegistrar
     private
 
     def message_bus
-      @message_bus ||= CfMessageBus::MessageBus.new(uri: Config.message_bus_uri)
+      @message_bus ||= CfMessageBus::MessageBus.new(
+        uri: Config.message_bus_uri,
+        logger: Config.logger)
     end
 
     def setup_interval(interval)
