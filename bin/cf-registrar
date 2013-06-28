@@ -4,11 +4,11 @@ $:.unshift(File.expand_path("../lib", File.dirname(__FILE__)))
 require "rubygems"
 require "yaml"
 
-require "cf_registrar"
+require "cf-registrar"
 require "vcap/logging"
 
 if ARGV.empty?
-  puts ("Usage: cf_registrar --<mode1> --<mode2> ...\n\nModes can be --register_with_router and --register_varz_credentials")
+  puts "Usage: cf-registrar --<mode1> --<mode2> ...\n\nModes can be --register_with_router and --register_varz_credentials"
   exit
 end
 
@@ -16,12 +16,12 @@ config_file = ENV["CONFIG_FILE"] || File.expand_path("../config/config.yml", Fil
 config = YAML.load_file(config_file)
 
 VCAP::Logging.setup_from_config(config["logging"])
-logger = VCAP::Logging.logger("cf_registrar")
+logger = VCAP::Logging.logger("cf-registrar")
 
 unless config["varz"]["file"].nil?
   varz_config = YAML.load_file(config["varz"]["file"])
   unless varz_config.nil?
-    logger.info ("Reading varz config from #{config["varz"]["file"]}")
+    logger.info "Reading varz config from #{config["varz"]["file"]}"
     config["varz"] = varz_config["varz"]
   end
 end
@@ -32,18 +32,18 @@ CfRegistrar::Config.configure(config)
 
 EM.run do
   cf_registrar = CfRegistrar::Registrar.new
-  if ARGV.include? ("--register_with_router")
+  if ARGV.include? "--register_with_router"
     cf_registrar.register_with_router
   end
 
-  if ARGV.include? ("--register_varz_credentials")
+  if ARGV.include? "--register_varz_credentials"
     cf_registrar.register_varz_credentials
   end
 
   ['TERM', 'INT', 'QUIT'].each do |signal|
-    trap (signal) do
+    trap signal do
       logger.info("Shutting down")
-      if ARGV.include? ("--register_with_router")
+      if ARGV.include? "--register_with_router"
         cf_registrar.shutdown { exit }
       end
       exit

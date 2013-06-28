@@ -1,4 +1,4 @@
-require "cf_registrar"
+require "cf-registrar"
 require "cf_message_bus/mock_message_bus"
 
 module CfRegistrar
