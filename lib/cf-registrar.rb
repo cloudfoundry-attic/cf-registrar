@@ -1,5 +1,5 @@
 require "eventmachine"
-require "vcap/logging"
+require "steno"
 require "securerandom"
 require "cf_message_bus/message_bus"
 
@@ -10,7 +10,7 @@ module CfRegistrar
                     :username, :password, :uri, :tags, :uuid, :index
 
       def configure(config)
-        @logger = VCAP::Logging.logger("cf.registrar")
+        @logger = Steno.logger("cf.registrar")
 
         @message_bus_uri = config["mbus"]
 
