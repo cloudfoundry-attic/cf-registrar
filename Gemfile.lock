@@ -11,6 +11,14 @@ GIT
       yajl-ruby
 
 GIT
+  remote: git://github.com/cloudfoundry/common.git
+  revision: e36886a189b82f880a5aa3e9169712d5d9048a88
+  ref: e36886a1
+  specs:
+    vcap_logging (1.0.1)
+      rake
+
+GIT
   remote: git://github.com/cloudfoundry/vcap-concurrency.git
   revision: dfddfb0bc0e599b94390ef8c026f71c4ddc323f7
   specs:
@@ -71,6 +79,7 @@ GEM
       rack (>= 0.4)
     rack-mount (0.8.3)
       rack (>= 1.0.0)
+    rake (10.1.1)
     rspec (2.14.1)
       rspec-core (~> 2.14.0)
       rspec-expectations (~> 2.14.0)
@@ -104,3 +113,4 @@ DEPENDENCIES
   cf-registrar!
   rspec
   vcap-concurrency!
+  vcap_logging!
