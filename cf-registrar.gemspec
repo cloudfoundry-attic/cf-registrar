@@ -1,7 +1,4 @@
-# coding: utf-8
-lib = File.expand_path('../lib', __FILE__)
-$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'cf-registrar/version'
+require File.join(File.dirname(__FILE__), 'lib/cf-registrar/version')
 
 Gem::Specification.new do |gem|
   gem.name = 'cf-registrar'
