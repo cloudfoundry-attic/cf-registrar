@@ -14,15 +14,16 @@ Gem::Specification.new do |gem|
   gem.summary = %q{Cloud Foundry registrar}
   gem.license = 'Apache'
 
-  gem.files = Dir['lib/**/*.rb']
-  gem.test_files = gem.files.grep(%r{^spec$})
   gem.require_paths = ['lib']
 
-  gem.add_development_dependency 'bundler', '~> 1.3'
-  gem.add_development_dependency 'rspec'
+  gem.files = Dir['lib/**/*.rb']
+  gem.test_files = gem.files.grep(%r{^spec$})
 
   gem.add_dependency 'eventmachine', '~> 1.0.0'
   gem.add_dependency 'steno'
   gem.add_dependency 'vcap-concurrency'
   gem.add_dependency 'cf-message-bus'
+
+  gem.add_development_dependency 'bundler', '~> 1.3'
+  gem.add_development_dependency 'rspec'
 end
