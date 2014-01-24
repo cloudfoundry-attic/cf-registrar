@@ -14,7 +14,10 @@ Gem::Specification.new do |gem|
   gem.require_paths = ['lib']
 
   gem.bindir = 'bin'
-  gem.files = Dir['lib/**/*.rb'] + Dir['bin/*']
+  gem.executables = Dir['bin/*'].map { |f| File.basename(f) }
+
+  gem.files = Dir['lib/**/*.rb']
+
   gem.test_files = Dir['spec/**/*']
 
   gem.add_dependency 'eventmachine', '~> 1.0.0'
