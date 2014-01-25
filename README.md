@@ -2,6 +2,8 @@
 
 [![Build Status](https://travis-ci.org/cloudfoundry/cf-registrar.png?branch=master)](https://travis-ci.org/cloudfoundry/cf-registrar)
 
+[![Code Climate](https://codeclimate.com/repos/52e301fd6956803ff1003c85/badges/c66e290472608e6af5f9/gpa.png)](https://codeclimate.com/repos/52e301fd6956803ff1003c85/feed)
+
 Helper to register with common components like Varz and CF Router
 
 ## Installation

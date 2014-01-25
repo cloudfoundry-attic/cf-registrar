@@ -1,2 +1,9 @@
 ---
-script: bundle exec rake --trace
+language: ruby
+rvm:
+  - 1.9.3
+  - 2.0
+
+addons:
+  code_climate:
+    repo_token: aeb6263f033a451b06459e63d301290a979d518ace816232bab281a19f2364bc
