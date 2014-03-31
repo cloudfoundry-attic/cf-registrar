@@ -75,6 +75,7 @@ module Cf
     end
 
     def shutdown(&block)
+      EM.cancel_timer(@registration_timer) if @registration_timer
       send_unregistration_message(&block)
     end
 

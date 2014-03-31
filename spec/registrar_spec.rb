@@ -148,9 +148,20 @@ module Cf
     end
 
     describe "#shutdown" do
+      before do
+        subject.register_with_router
+        EM.should_receive(:add_periodic_timer).with(33).and_return(:periodic_timer)
+        message_bus.publish("router.start", minimumRegisterIntervalInSeconds: 33)
+      end
+
       it "publishes router.unregister" do
         subject.shutdown
         expect(message_bus).to have_published_with_message("router.unregister", registry_message)
+      end
+
+      it "stops sending registration messages" do
+        EM.should_receive(:cancel_timer).with(:periodic_timer)
+        subject.shutdown
       end
 
       it "calls the given block after sending" do
