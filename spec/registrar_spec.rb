@@ -1,4 +1,5 @@
 require "spec_helper"
+require 'rspec/its'
 require "cf/registrar"
 require "cf_message_bus/mock_message_bus"
 
@@ -162,6 +163,15 @@ module Cf
       it "stops sending registration messages" do
         EM.should_receive(:cancel_timer).with(:periodic_timer)
         subject.shutdown
+      end
+
+      it 'unsubscribes from the router start topic' do
+        subject.shutdown
+
+        message_bus.clear_published_messages
+        message_bus.publish('router.start', minimumRegisterIntervalInSeconds: 33)
+
+        expect(message_bus.has_published?('router.register')).to be_falsey
       end
 
       it "calls the given block after sending" do

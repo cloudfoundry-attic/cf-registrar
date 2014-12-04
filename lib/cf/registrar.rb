@@ -63,7 +63,7 @@ module Cf
     def register_with_router
       logger.info("Connected to NATS - router registration")
 
-      message_bus.subscribe(ROUTER_START_TOPIC) do |message|
+      @router_start_sid = message_bus.subscribe(ROUTER_START_TOPIC) do |message|
         handle_router_greeting(message)
       end
 
@@ -76,6 +76,7 @@ module Cf
 
     def shutdown(&block)
       EM.cancel_timer(@registration_timer) if @registration_timer
+      unsubscribe_from_router_start
       send_unregistration_message(&block)
     end
 
@@ -103,6 +104,11 @@ module Cf
     def send_unregistration_message(&block)
       logger.info("Sending unregistration: #{registry_message}")
       message_bus.publish(ROUTER_UNREGISTER_TOPIC, registry_message, &block)
+    end
+
+    def unsubscribe_from_router_start
+      logger.debug('Unsubscribing from router.start')
+      message_bus.unsubscribe(@router_start_sid)
     end
 
     def registry_message
