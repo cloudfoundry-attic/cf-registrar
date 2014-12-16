@@ -18,7 +18,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'eventmachine', '~> 1.0.0'
   spec.add_dependency 'steno'
   spec.add_dependency 'vcap-concurrency'
-  spec.add_dependency 'cf-message-bus'
+  spec.add_dependency 'cf-message-bus', '~> 0.3.0'
 
   spec.add_development_dependency 'bundler'
   spec.add_development_dependency 'rake'
