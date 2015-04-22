@@ -13,7 +13,7 @@ module Cf
     ROUTER_UNREGISTER_TOPIC = "router.unregister"
 
     attr_reader :logger, :message_bus_servers, :type, :host, :port,
-                :username, :password, :uri, :tags, :uuid, :index, :private_instance_id
+                :username, :password, :uri, :tags, :uuid, :index, :private_instance_id, :job_name
 
     def initialize(config)
       @logger = Steno.logger("cf.registrar")
@@ -27,6 +27,7 @@ module Cf
       @tags = config[:tags]
       @index = config[:index] || 0
       @private_instance_id = config[:private_instance_id]
+      @job_name = config[:name]
 
       if config[:varz]
         @type = config[:varz][:type]
@@ -38,11 +39,12 @@ module Cf
 
     def register_varz_credentials
       discover_msg = {
-        :type => type,
-        :host => "#{host}:#{port}",
-        :index => index,
-        :uuid => "#{index}-#{uuid}",
-        :credentials => [username, password]
+          :type => type,
+          :host => "#{host}:#{port}",
+          :index => index,
+          :uuid => "#{index}-#{uuid}",
+          :credentials => [username, password],
+          :job_name => job_name
       }
 
       if username.nil? || password.nil?
