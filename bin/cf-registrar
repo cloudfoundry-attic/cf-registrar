@@ -32,7 +32,6 @@ logger.debug("Config #{config.inspect}")
 EM.run do
   cf_registrar = Cf::Registrar.new({
     :message_bus_servers => config["message_bus_servers"],
-    :host => config["host"],
     :port => config["port"],
     :uri => config["uri"],
     :tags => config["tags"],

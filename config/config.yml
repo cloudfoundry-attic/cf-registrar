@@ -8,7 +8,6 @@ uri: test.vcap.me
 # uri:
 #   - test.vcap.me
 #   - abc.vcap.me
-host: localhost
 port: 80
 varz:
   type: new_component
