@@ -1,8 +1,6 @@
+### **WARNING: This repository is deprecated. It is not under active development, and is not used by any core Cloud Foundry development teams. Pull requests to this repo are no longer being monitored.**
+
 # Cf::Registrar
-
-[![Build Status](https://travis-ci.org/cloudfoundry/cf-registrar.png?branch=master)](https://travis-ci.org/cloudfoundry/cf-registrar)
-
-[![Code Climate](https://codeclimate.com/repos/52e301fd6956803ff1003c85/badges/c66e290472608e6af5f9/gpa.png)](https://codeclimate.com/repos/52e301fd6956803ff1003c85/feed)
 
 Helper to register with common components like Varz and CF Router
 
@@ -24,11 +22,3 @@ Or install it yourself as:
 
     # Modes can be --register-with-router and --register-varz-credentials
     $ cf-registrar --<mode1> --<mode2> ...
-
-## Contributing
-
-1. Fork it ( http://github.com/cloudfoundry/cf-registrar/fork )
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create new Pull Request
