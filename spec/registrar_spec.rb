@@ -86,6 +86,16 @@ module Cf
         its(:host) { should eq "h" }
         its(:username) { should eq "user" }
       end
+
+      context "when a name is provided in the config" do
+        let(:config) { {varz: {username: "user", password: "pass", type: "foo", uuid: "123"}, name: "jobname"} }
+
+        it "includes a job_name in the announce message" do
+          subject.register_varz_credentials
+          announce_msg = {:type=>"foo", :host=>":", :index=>0, :uuid=>"0-123", :credentials=>["user", "pass"], :job_name=>"jobname"}
+          expect(message_bus).to have_published_with_message("vcap.component.announce", announce_msg)
+        end
+      end
     end
 
     describe "#register_with_router" do
