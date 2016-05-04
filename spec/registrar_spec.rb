@@ -9,41 +9,41 @@ module Cf
     let(:bus_uri) { "a message bus uri" }
     let(:logger) { double(:logger, info: nil, error: nil, debug: nil) }
     let(:config) do
-      { message_bus_servers: [bus_uri],
-        host: "registrar.host",
-        port: 98765,
-        uri: "fancyuri",
-        tags: "taggy goodness",
-        private_instance_id: "monkey-id",
-        index: "indextastic",
-        varz: {}
+      {message_bus_servers: [bus_uri],
+       port: 98765,
+       uri: "fancyuri",
+       tags: "taggy goodness",
+       private_instance_id: "monkey-id",
+       index: "indextastic",
+       varz: {}
       }
     end
 
     let(:registry_message) do
       {
-        host: config[:host],
-        port: config[:port],
-        uris: Array(config[:uri]),
-        tags: config[:tags],
-        index: "indextastic",
-        private_instance_id: "monkey-id"
+          host: '12.13.14.15',
+          port: config[:port],
+          uris: Array(config[:uri]),
+          tags: config[:tags],
+          index: "indextastic",
+          private_instance_id: "monkey-id"
       }
     end
 
     before do
       EM.stub(:cancel_timer)
       CfMessageBus::MessageBus.stub(:new) { message_bus }
+      Cf::Registrar.any_instance.stub(:detect_local_ip_address).and_return('12.13.14.15')
     end
 
     subject { described_class.new(config) }
 
     describe ".new" do
-      let(:config) { { message_bus_servers: ["m"], host: "h", port: "p", uri: "u", tags: "t", index: 1, private_instance_id: "monkey" } }
+      let(:config) { {message_bus_servers: ["m"], port: "p", uri: "u", tags: "t", index: 1, private_instance_id: "monkey"} }
 
       its(:logger) { should be_a Steno::Logger }
       its(:message_bus_servers) { should eq(["m"]) }
-      its(:host) { should eq "h" }
+      its(:host) { should eq '12.13.14.15' }
       its(:port) { should eq "p" }
       its(:uri) { should eq "u" }
       its(:tags) { should eq "t" }
@@ -51,7 +51,7 @@ module Cf
       its(:private_instance_id) { should eq "monkey" }
 
       context "when the index is not provided" do
-        let(:config) { { message_bus_servers: ["m"], host: "h", port: "p", uri: "u", tags: "t" } }
+        let(:config) { {message_bus_servers: ["m"], port: "p", uri: "u", tags: "t"} }
 
         its(:index) { should eq 0 }
       end
@@ -66,7 +66,7 @@ module Cf
       end
 
       context "when there is a varz provided" do
-        let(:config) { { varz: { username: "user", password: "pass", type: "foo", uuid: "123" } } }
+        let(:config) { {varz: {username: "user", password: "pass", type: "foo", uuid: "123"}} }
 
         its(:username) { should eq "user" }
         its(:password) { should eq "pass" }
@@ -74,16 +74,16 @@ module Cf
         its(:uuid) { should eq "123" }
 
         context "and a uuid is not provided" do
-          let(:config) { { varz: { username: "user", password: "pass", type: "foo" } } }
+          let(:config) { {varz: {username: "user", password: "pass", type: "foo"}} }
 
           its(:uuid) { should_not be_nil }
         end
       end
 
       context "when there are values with String keys" do
-        let(:config) { { "host" => "h", :varz => { "username" => "user" } } }
+        let(:config) { {:varz => {"username" => "user"}} }
 
-        its(:host) { should eq "h" }
+        its(:host) { should eq '12.13.14.15' }
         its(:username) { should eq "user" }
       end
     end

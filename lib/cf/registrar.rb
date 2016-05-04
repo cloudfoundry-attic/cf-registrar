@@ -1,7 +1,8 @@
-require "eventmachine"
-require "steno"
-require "securerandom"
-require "cf_message_bus/message_bus"
+require 'eventmachine'
+require 'securerandom'
+require 'socket'
+require 'steno'
+require 'cf_message_bus/message_bus'
 
 module Cf
   class Registrar
@@ -21,7 +22,7 @@ module Cf
       config = symbolize_keys(config)
 
       @message_bus_servers = config[:message_bus_servers]
-      @host = config[:host]
+      @host = detect_local_ip_address
       @port = config[:port]
       @uri = config[:uri]
       @tags = config[:tags]
@@ -34,6 +35,10 @@ module Cf
         @password = config[:varz][:password]
         @uuid = config[:varz][:uuid] || SecureRandom.uuid
       end
+    end
+
+    def detect_local_ip_address
+      Socket.ip_address_list.detect { |inf| inf.ipv4? and !inf.ipv4_loopback? and inf.ipv4_private? }.ip_address
     end
 
     def register_varz_credentials
